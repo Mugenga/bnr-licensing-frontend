@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-// import { Geist, Geist_Mono } from 'next/font/google'
 import { QueryProvider } from '@/lib/query-provider'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css' // Import global styles
-
-// const _geist = Geist({ subsets: ["latin"] });
-// const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 // Define metadata and viewport for the application
 export const metadata: Metadata = {

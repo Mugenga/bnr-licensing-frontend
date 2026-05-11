@@ -19,6 +19,14 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
+      const requestUrl = error.config?.url || ""
+      const isAuthRequest = requestUrl.includes("/auth/login") || requestUrl.includes("/auth/register")
+      const isAuthPage = window.location.pathname === "/login" || window.location.pathname === "/signup"
+
+      if (isAuthRequest || isAuthPage) {
+        return Promise.reject(error)
+      }
+
       localStorage.removeItem("auth_token")
       localStorage.removeItem("user")
       window.location.href = "/login"
