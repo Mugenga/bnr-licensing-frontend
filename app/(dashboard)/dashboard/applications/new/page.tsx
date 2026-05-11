@@ -46,6 +46,7 @@ export default function NewApplicationPage() {
   const requiredDocsQuery = useQuery({
     queryKey: ['required-documents', licenseType],
     queryFn: () => applicationsApi.getRequiredDocuments(licenseType),
+    // Required docs depend on selected license, so no request until user picks one.
     enabled: !!licenseType,
   })
 
@@ -80,6 +81,7 @@ export default function NewApplicationPage() {
   }
 
   const missingRequiredDocuments = () => {
+    // Submit is stricter than saving draft; draft can still be incomplete.
     return requiredDocuments.filter((document) => !requiredFiles[document.key])
   }
 

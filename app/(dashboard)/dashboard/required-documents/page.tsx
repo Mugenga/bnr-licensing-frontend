@@ -28,12 +28,14 @@ export default function RequiredDocumentsPage() {
   })
 
   useEffect(() => {
+    // Changing license type swaps the rows being edited on this page.
     setRequiredDocuments(requiredDocsQuery.data?.[selectedLicenseType] || [])
   }, [requiredDocsQuery.data, selectedLicenseType])
 
   const saveMutation = useMutation({
     mutationFn: () => {
       setFormError('')
+      // Backend replaces the full list for this license type.
       return applicationsApi.setRequiredDocuments(selectedLicenseType, requiredDocuments)
     },
     onSuccess: async () => {
@@ -52,6 +54,7 @@ export default function RequiredDocumentsPage() {
   }
 
   const updateRequiredDocument = (index: number, patch: Partial<RequiredDocument>) => {
+    // Keep row editing local until admin clicks save.
     setRequiredDocuments((prev) => prev.map((document, docIndex) => docIndex === index ? { ...document, ...patch } : document))
   }
 

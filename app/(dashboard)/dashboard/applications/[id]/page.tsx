@@ -42,6 +42,7 @@ export default function ApplicationDetailsPage() {
   const requiredDocsQuery = useQuery({
     queryKey: ['required-documents', applicationQuery.data?.licenseType],
     queryFn: () => applicationsApi.getRequiredDocuments(applicationQuery.data?.licenseType || ''),
+    // Wait for application first because license type lives on it.
     enabled: !!applicationQuery.data?.licenseType,
   })
 
@@ -56,6 +57,7 @@ export default function ApplicationDetailsPage() {
 
   const actionMutation = useMutation({
     mutationFn: async ({ action, value }: { action: string; value?: string }) => {
+      // Keep workflow calls in one mutation so dialogs share same error handling.
       if (action === 'submit') return applicationsApi.submit(id)
       if (action === 'review') return applicationsApi.startReview(id)
       if (action === 'requestDocuments') return applicationsApi.requestDocuments(id, value || '') // send officer message.

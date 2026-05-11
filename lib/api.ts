@@ -9,6 +9,7 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
+    // Token lives in browser storage, so add it only on client requests.
     const token = localStorage.getItem("auth_token")
     if (token) config.headers.Authorization = `Bearer ${token}`
   }
@@ -24,7 +25,8 @@ api.interceptors.response.use(
       const isAuthPage = window.location.pathname === "/login" || window.location.pathname === "/signup"
 
       if (isAuthRequest || isAuthPage) {
-        return Promise.reject(error) // lets auth errors stay on form.
+        // Login/signup need to show error in form, not refresh away.
+        return Promise.reject(error)
       }
 
       localStorage.removeItem("auth_token")
@@ -298,6 +300,7 @@ export const applicationsApi = {
   uploadDocuments: async (applicationId: string, files: File[] | { file: File; documentType?: string }[]): Promise<Document[]> => {
     const formData = new FormData()
     files.forEach((item) => {
+      // Some uploads are general files, some are tied to required document keys.
       const file = item instanceof File ? item : item.file
       const documentType = item instanceof File ? undefined : item.documentType
       formData.append("documents", file)

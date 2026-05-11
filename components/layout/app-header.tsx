@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronDown, LogOut, Search, User } from 'lucide-react'
+import { ChevronDown, LogOut, User } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -24,12 +24,7 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/85 md:px-8">
-      <div className="ml-12 flex items-center gap-3 md:ml-0">
-        <div className="hidden h-9 w-72 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground md:flex">
-          <Search className="h-4 w-4" />
-          <span>Search applications, users, roles</span>
-        </div>
-      </div>
+      <div className="ml-12 md:ml-0" />
 
       <div className="flex items-center gap-3">
         <DropdownMenu>

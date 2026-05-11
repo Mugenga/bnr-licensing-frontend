@@ -32,10 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      // Ask backend for current user so changed permissions are picked up.
       const userData = await authApi.me()
       setUser(userData)
-      localStorage.setItem('user', JSON.stringify(userData)) // keep local user fresh.
+      localStorage.setItem('user', JSON.stringify(userData))
     } catch {
+      // Bad or expired token should leave the app in clean signed-out state.
       localStorage.removeItem('auth_token')
       localStorage.removeItem('user')
       setUser(null)
@@ -50,7 +52,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (storedUser && token) {
       try {
-        setUser(JSON.parse(storedUser)) // show cached user while token check.
+        // Show cached user first, then loadUser confirms it with backend.
+        setUser(JSON.parse(storedUser))
       } catch {
         localStorage.removeItem('user')
       }
