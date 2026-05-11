@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Shield, FileText, CheckCircle2, Clock, ArrowRight, Building2, Scale, Users2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PublicHeader } from '@/components/layout/public-header'
+import { PublicFooter } from '@/components/layout/public-footer'
 
 export default function LandingPage() {
   return (
@@ -194,44 +195,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-muted/50 border-t border-border py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="md:col-span-2">
-              <Image
-                src="/bnr-logo.svg"
-                alt="National Bank of Rwanda"
-                width={160}
-                height={37}
-                className="h-9 w-auto mb-4"
-              />
-              <p className="text-sm text-muted-foreground max-w-md">
-                The Bank Licensing & Compliance Portal is an official platform of the National Bank of Rwanda
-                for managing financial institution licensing.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/login" className="hover:text-foreground">Sign In</Link></li>
-                <li><Link href="#features" className="hover:text-foreground">Features</Link></li>
-                <li><Link href="#process" className="hover:text-foreground">How it works</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>KN 6 Ave, Kigali</li>
-                <li>info@bnr.rw</li>
-                <li>+250 788 890 890</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} National Bank of Rwanda. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   )
 }

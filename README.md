@@ -6,9 +6,6 @@ This project is the frontend interface for the Bank Licensing and Compliance Por
 
 The frontend provides a role-based working environment for applicants, licensing officers, approvers, and system administrators. It connects directly to the backend API and presents the application workflow in a clear and usable way, from application creation up to review, document requests, final approval, or rejection.
 
-### Purpose
-
-The main purpose of this frontend is to make the regulatory workflow easier to follow and harder to misuse. Applicants can submit and track licensing applications, officers can review submissions and request additional documents, approvers can make final decisions, and superadmins can manage users, roles, and permissions.
 
 ### Technology Stack
 
