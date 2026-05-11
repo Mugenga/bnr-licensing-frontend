@@ -37,7 +37,7 @@ export default function UsersPage() {
       user.email.toLowerCase().includes(query) ||
       user.fullName.toLowerCase().includes(query) ||
       (user.organizationName || '').toLowerCase().includes(query)
-    )
+    ) // search users without calling backend again.
   }, [users, searchQuery])
 
   const createMutation = useMutation({
@@ -45,8 +45,8 @@ export default function UsersPage() {
     onSuccess: async () => {
       toast.success('User created successfully')
       setShowCreateDialog(false)
-      setNewUser({ fullName: '', email: '', organizationName: '', roleId: '', password: '' })
-      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      setNewUser({ fullName: '', email: '', organizationName: '', roleId: '', password: '' }) // clear form after create.
+      await queryClient.invalidateQueries({ queryKey: ['users'] }) // lets table show new user.
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   })
@@ -64,7 +64,7 @@ export default function UsersPage() {
   if (usersQuery.isError || rolesQuery.isError) return <ErrorState title="Could not load users" message="Please check that the backend is running." onRetry={() => { usersQuery.refetch(); rolesQuery.refetch() }} />
 
   const handleToggleStatus = (user: User) => {
-    statusMutation.mutate({ user, status: user.status === 'active' ? 'inactive' : 'active' })
+    statusMutation.mutate({ user, status: user.status === 'active' ? 'inactive' : 'active' }) // switch active and inactive.
   }
 
   return (

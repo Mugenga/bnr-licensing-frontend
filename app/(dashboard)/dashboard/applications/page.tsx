@@ -49,11 +49,11 @@ export default function ApplicationsPage() {
       app.institutionName.toLowerCase().includes(query) ||
       app.referenceNumber.toLowerCase().includes(query) ||
       app.licenseType.toLowerCase().includes(query)
-    )
+    ) // this handle local search after backend filter.
   }, [applications, searchQuery])
 
   const getPageTitle = () => {
-    if (hasRole('applicant')) return 'My Applications'
+    if (hasRole('applicant')) return 'My Applications' // applicant see their own work.
     if (hasRole('officer')) return 'Applications for Review'
     if (hasRole('approver')) return 'Pending Approvals'
     return 'All Applications'

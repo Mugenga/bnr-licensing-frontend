@@ -25,7 +25,7 @@ function permissionCategory(permission: Permission) {
   if (permission.name.includes('user')) return 'users'
   if (permission.name.includes('role')) return 'roles'
   if (permission.name.includes('audit')) return 'audit'
-  return 'applications'
+  return 'applications' // most permissions are application ones.
 }
 
 export default function RolesPage() {
@@ -43,14 +43,14 @@ export default function RolesPage() {
 
   const filteredRoles = useMemo(() => {
     const query = searchQuery.toLowerCase()
-    return roles.filter((role) => role.name.toLowerCase().includes(query) || (role.description || '').toLowerCase().includes(query))
+    return roles.filter((role) => role.name.toLowerCase().includes(query) || (role.description || '').toLowerCase().includes(query)) // search roles in memory.
   }, [roles, searchQuery])
 
   const permissionsByCategory = useMemo(() => {
     return permissions.reduce<Record<string, Permission[]>>((groups, permission) => {
       const category = permissionCategory(permission)
       groups[category] = groups[category] || []
-      groups[category].push(permission)
+      groups[category].push(permission) // group permissions for the checkbox list.
       return groups
     }, {})
   }, [permissions])
@@ -83,13 +83,13 @@ export default function RolesPage() {
       ...prev,
       permissionNames: prev.permissionNames.includes(permissionName)
         ? prev.permissionNames.filter((name) => name !== permissionName)
-        : [...prev.permissionNames, permissionName],
+        : [...prev.permissionNames, permissionName], // add if not picked yet.
     }))
   }
 
   const viewPermissions = (role: Role) => {
     setSelectedRole(role)
-    setShowPermissionsDialog(true)
+    setShowPermissionsDialog(true) // open role permissions modal.
   }
 
   return (

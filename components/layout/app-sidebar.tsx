@@ -101,7 +101,7 @@ function NavLinks({ onItemClick }: { onItemClick?: () => void }) {
 
   const filteredItems = navItems.filter((item) => {
     if (!item.roles) return true
-    return item.roles.some((role) => hasRole(role as 'applicant' | 'officer' | 'approver' | 'superadmin'))
+    return item.roles.some((role) => hasRole(role as 'applicant' | 'officer' | 'approver' | 'superadmin')) // keep menu by user role.
   })
 
   return (
@@ -109,7 +109,7 @@ function NavLinks({ onItemClick }: { onItemClick?: () => void }) {
       {filteredItems.map((item) => {
         const Icon = item.icon
         const isActive = pathname === item.href || 
-          (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          (item.href !== '/dashboard' && pathname.startsWith(item.href)) // this helps child pages stay active.
 
         return (
           <Link
@@ -157,7 +157,7 @@ export function AppSidebar() {
         <SheetContent side="left" className="w-72 p-0 bg-sidebar border-none">
           <SidebarLogo />
           <div className="py-4">
-            <NavLinks onItemClick={() => setOpen(false)} />
+            <NavLinks onItemClick={() => setOpen(false)} /> {/* close menu after mobile click */}
           </div>
         </SheetContent>
       </Sheet>
