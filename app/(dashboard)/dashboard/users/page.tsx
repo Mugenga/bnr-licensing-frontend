@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MoreHorizontal, Plus, Search, UserCheck, UserX } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
+import { FormError } from '@/components/ui/form-error'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +26,7 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [newUser, setNewUser] = useState({ fullName: '', email: '', organizationName: '', roleId: '', password: '' })
+  const [createError, setCreateError] = useState('')
 
   const usersQuery = useQuery({ queryKey: ['users'], queryFn: () => usersApi.list({ page: 1, limit: 100 }) })
   const rolesQuery = useQuery({ queryKey: ['roles'], queryFn: rolesApi.list })
@@ -41,14 +43,22 @@ export default function UsersPage() {
   }, [users, searchQuery])
 
   const createMutation = useMutation({
-    mutationFn: () => usersApi.create({ ...newUser, status: 'active' }),
+    mutationFn: () => {
+      setCreateError('')
+      return usersApi.create({ ...newUser, status: 'active' })
+    },
     onSuccess: async () => {
       toast.success('User created successfully')
       setShowCreateDialog(false)
       setNewUser({ fullName: '', email: '', organizationName: '', roleId: '', password: '' }) // clear form after create.
+      setCreateError('')
       await queryClient.invalidateQueries({ queryKey: ['users'] }) // lets table show new user.
     },
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error) => {
+      const message = getErrorMessage(error)
+      setCreateError(message)
+      toast.error(message)
+    },
   })
 
   const statusMutation = useMutation({
@@ -140,6 +150,7 @@ export default function UsersPage() {
               </Select>
             </div>
             <div className="space-y-2"><Label htmlFor="password">Password</Label><Input id="password" type="password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} /></div>
+            <FormError message={createError} />
           </div>
           <DialogFooter><Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button><Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>Create User</Button></DialogFooter>
         </DialogContent>

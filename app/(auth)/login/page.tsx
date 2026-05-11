@@ -10,6 +10,7 @@ import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormError } from '@/components/ui/form-error'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicHeader } from '@/components/layout/public-header'
@@ -27,6 +28,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [formError, setFormError] = useState('')
 
   const {
     register,
@@ -38,6 +40,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
+    setFormError('')
     try {
       const response = await authApi.login(data)
       localStorage.setItem('auth_token', response.token)
@@ -45,7 +48,9 @@ export default function LoginPage() {
       toast.success('Welcome back')
       router.push('/dashboard')
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      setFormError(message)
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -104,6 +109,7 @@ export default function LoginPage() {
                     <p className="text-xs text-destructive">{errors.password.message}</p>
                   )}
                 </div>
+                <FormError message={formError} />
                 <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <>

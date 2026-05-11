@@ -10,6 +10,7 @@ import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormError } from '@/components/ui/form-error'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicHeader } from '@/components/layout/public-header'
@@ -35,10 +36,12 @@ export default function SignupPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [formError, setFormError] = useState('')
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
@@ -46,6 +49,7 @@ export default function SignupPage() {
 
   const onSubmit = async ({ confirmPassword, ...data }: SignupForm) => {
     setIsLoading(true)
+    setFormError('')
     try {
       const response = await authApi.register(data)
       localStorage.setItem('auth_token', response.token)
@@ -53,7 +57,12 @@ export default function SignupPage() {
       toast.success('Account created')
       router.push('/dashboard')
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      setFormError(message)
+      if (message.toLowerCase().includes('email')) {
+        setError('email', { type: 'server', message }) // mark email if backend reject it.
+      }
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -158,6 +167,7 @@ export default function SignupPage() {
                   </div>
                 </div>
 
+                <FormError message={formError} />
                 <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <>

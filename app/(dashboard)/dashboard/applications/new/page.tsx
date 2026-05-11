@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { FileText, Loader2, Upload, X } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
+import { FormError } from '@/components/ui/form-error'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -32,6 +33,7 @@ export default function NewApplicationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSavingDraft, setIsSavingDraft] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [formError, setFormError] = useState('')
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
@@ -71,12 +73,15 @@ export default function NewApplicationPage() {
 
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true)
+    setFormError('')
     try {
       await createApplication(data, true)
       toast.success('Application submitted successfully')
       router.push('/dashboard/applications')
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      setFormError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -84,12 +89,15 @@ export default function NewApplicationPage() {
 
   const saveDraft = handleSubmit(async (data) => {
     setIsSavingDraft(true)
+    setFormError('')
     try {
       const application = await createApplication(data, false)
       toast.success('Draft saved successfully')
       router.push(`/dashboard/applications/${application.id}`)
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      setFormError(message)
+      toast.error(message)
     } finally {
       setIsSavingDraft(false)
     }
@@ -167,6 +175,9 @@ export default function NewApplicationPage() {
         </Card>
 
         <div className="flex items-center justify-end gap-4">
+          <div className="mr-auto w-full max-w-md">
+            <FormError message={formError} />
+          </div>
           <Button type="button" variant="outline" onClick={saveDraft} disabled={isSavingDraft || isSubmitting}>
             {isSavingDraft ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : 'Save as Draft'}
           </Button>

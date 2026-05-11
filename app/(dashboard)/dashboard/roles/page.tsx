@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MoreHorizontal, Plus, Search, Shield, Trash2 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
+import { FormError } from '@/components/ui/form-error'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -35,6 +36,7 @@ export default function RolesPage() {
   const [showPermissionsDialog, setShowPermissionsDialog] = useState(false)
   const [selectedRole, setSelectedRole] = useState<Role | null>(null)
   const [newRole, setNewRole] = useState({ name: '', description: '', permissionNames: [] as string[] })
+  const [createError, setCreateError] = useState('')
 
   const rolesQuery = useQuery({ queryKey: ['roles'], queryFn: rolesApi.list })
   const permissionsQuery = useQuery({ queryKey: ['permissions'], queryFn: permissionsApi.list })
@@ -56,14 +58,22 @@ export default function RolesPage() {
   }, [permissions])
 
   const createMutation = useMutation({
-    mutationFn: () => rolesApi.create(newRole),
+    mutationFn: () => {
+      setCreateError('')
+      return rolesApi.create(newRole)
+    },
     onSuccess: async () => {
       toast.success('Role created successfully')
       setShowCreateDialog(false)
       setNewRole({ name: '', description: '', permissionNames: [] })
+      setCreateError('')
       await queryClient.invalidateQueries({ queryKey: ['roles'] })
     },
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error) => {
+      const message = getErrorMessage(error)
+      setCreateError(message)
+      toast.error(message)
+    },
   })
 
   const deleteMutation = useMutation({
@@ -157,6 +167,7 @@ export default function RolesPage() {
                 </Card>
               ))}
             </div>
+            <FormError message={createError} />
           </div>
           <DialogFooter><Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button><Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !newRole.name.trim()}>Create Role</Button></DialogFooter>
         </DialogContent>

@@ -9,6 +9,7 @@ import { applicationsApi, documentsApi, getErrorMessage } from '@/lib/api'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormError } from '@/components/ui/form-error'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
@@ -32,6 +33,7 @@ export default function ApplicationDetailsPage() {
   const [requestMessage, setRequestMessage] = useState('')
   const [decisionNote, setDecisionNote] = useState('')
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [workflowError, setWorkflowError] = useState('')
 
   const applicationQuery = useQuery({ queryKey: ['application', id], queryFn: () => applicationsApi.get(id) })
   const documentsQuery = useQuery({ queryKey: ['application-documents', id], queryFn: () => applicationsApi.getDocuments(id), enabled: !!applicationQuery.data })
@@ -64,9 +66,14 @@ export default function ApplicationDetailsPage() {
       setShowRejectDialog(false)
       setRequestMessage('')
       setDecisionNote('')
+      setWorkflowError('')
       await invalidate() // refresh docs, audit trail, and status.
     },
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error) => {
+      const message = getErrorMessage(error)
+      setWorkflowError(message)
+      toast.error(message)
+    },
   })
 
   const uploadMutation = useMutation({
@@ -74,9 +81,14 @@ export default function ApplicationDetailsPage() {
     onSuccess: async () => {
       toast.success('Documents uploaded')
       setSelectedFiles([])
+      setWorkflowError('')
       await invalidate()
     },
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error) => {
+      const message = getErrorMessage(error)
+      setWorkflowError(message)
+      toast.error(message)
+    },
   })
 
   const app = applicationQuery.data
@@ -235,6 +247,7 @@ export default function ApplicationDetailsPage() {
         <DialogContent>
           <DialogHeader><DialogTitle>Request Additional Documents</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="request-message">Documents Required</Label><Textarea id="request-message" value={requestMessage} onChange={(e) => setRequestMessage(e.target.value)} rows={4} /></div>
+          <FormError message={workflowError} />
           <DialogFooter><Button variant="outline" onClick={() => setShowRequestDocsDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'requestDocuments', value: requestMessage })} disabled={!requestMessage.trim() || actionMutation.isPending}>Send Request</Button></DialogFooter>
         </DialogContent>
       </Dialog>
@@ -243,6 +256,7 @@ export default function ApplicationDetailsPage() {
         <DialogContent>
           <DialogHeader><DialogTitle>Approve Application</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="approve-note">Decision Note</Label><Textarea id="approve-note" value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} rows={4} /></div>
+          <FormError message={workflowError} />
           <DialogFooter><Button variant="outline" onClick={() => setShowApproveDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'approve', value: decisionNote })} disabled={!decisionNote.trim() || actionMutation.isPending} className="bg-green-600 hover:bg-green-700">Approve</Button></DialogFooter>
         </DialogContent>
       </Dialog>
@@ -251,6 +265,7 @@ export default function ApplicationDetailsPage() {
         <DialogContent>
           <DialogHeader><DialogTitle>Reject Application</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="reject-note">Decision Note</Label><Textarea id="reject-note" value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} rows={4} /></div>
+          <FormError message={workflowError} />
           <DialogFooter><Button variant="outline" onClick={() => setShowRejectDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'reject', value: decisionNote })} variant="destructive" disabled={!decisionNote.trim() || actionMutation.isPending}>Reject</Button></DialogFooter>
         </DialogContent>
       </Dialog>
