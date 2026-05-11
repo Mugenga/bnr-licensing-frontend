@@ -74,6 +74,13 @@ export interface LoginRequest {
   password: string
 }
 
+export interface RegisterRequest {
+  fullName: string
+  email: string
+  password: string
+  organizationName: string
+}
+
 export interface LoginResponse {
   token: string
   user: User
@@ -192,6 +199,10 @@ function withTotalPages<T>(response: BackendListResponse<T>): PaginatedResponse<
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post("/auth/login", credentials)
+    return response.data.data
+  },
+  register: async (data: RegisterRequest): Promise<LoginResponse> => {
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post("/auth/register", data)
     return response.data.data
   },
   me: async (): Promise<User> => {

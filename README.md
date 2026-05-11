@@ -18,9 +18,9 @@ The frontend was built using:
 - React 19
 - TypeScript
 - Tailwind CSS
-- shadcn/ui components
+- shadcn/ui components (For UI components used throughout the project)
 - React Query for server state management
-- Axios for backend API communication
+- Axios for backend API
 - React Hook Form and Zod for form validation
 - Lucide React for icons
 
@@ -61,7 +61,7 @@ If this variable is not provided, the frontend assumes that the backend API is a
 1. First start the backend (More detailes in the backend ReadME.md file):
 
 ```bash
-cd bank-licensing-backend
+cd bnr-licensing-backend
 npm install
 npm run db:migrate
 npm run db:seed
@@ -71,7 +71,7 @@ npm run dev
 2. Then start the frontend:
 
 ```bash
-cd bank-licensing-frontend
+cd bnr-licensing-frontend
 npm install
 npm run dev
 ```

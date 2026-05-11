@@ -2,61 +2,25 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Shield, FileText, CheckCircle2, Clock, ArrowRight, Building2, Scale, Users2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PublicHeader } from '@/components/layout/public-header'
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/bnr-logo.svg"
-                alt="National Bank of Rwanda"
-                width={180}
-                height={42}
-                className="h-10 w-auto"
-              />
-            </div>
-            <nav className="hidden md:flex items-center gap-8">
-              <Link href="#features" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
-                Features
-              </Link>
-              <Link href="#process" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
-                Process
-              </Link>
-              <Link href="#contact" className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors">
-                Contact
-              </Link>
-            </nav>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" asChild>
-                <Link href="/login">Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/login">Get Started</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* 0. Header/Navigation Section */}
+      <PublicHeader />
 
-      {/* Hero Section */}
+      {/* 1. Main Header Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-sidebar/5 via-background to-primary/5">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
-                <Shield className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Secure Regulatory Platform</span>
-              </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
                 Bank Licensing & Compliance Portal
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                A centralized platform for financial institutions to submit licensing applications, 
+                A digital platform for financial institutions to submit licensing applications, 
                 track progress, and maintain regulatory compliance with the National Bank of Rwanda.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -69,16 +33,6 @@ export default function LandingPage() {
                 <Button size="lg" variant="outline" asChild>
                   <Link href="#process">Learn More</Link>
                 </Button>
-              </div>
-              <div className="flex items-center gap-6 pt-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <span>Secure & Audited</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-amber-600" />
-                  <span>Real-time Tracking</span>
-                </div>
               </div>
             </div>
             <div className="hidden lg:block">
@@ -121,12 +75,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* 2. Features Section */}
       <section id="features" className="py-24 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Streamlined Licensing Process
+              Improved Licensing Process
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Our platform simplifies the entire licensing workflow from application to approval
@@ -139,7 +93,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Digital Applications</h3>
               <p className="text-muted-foreground">
-                Submit and manage all licensing applications online with secure document uploads and version control.
+                Submit and manage all licensing applications online.
               </p>
             </div>
             <div className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-shadow">
@@ -157,7 +111,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Secure & Compliant</h3>
               <p className="text-muted-foreground">
-                Complete audit trail with tamper-proof records ensuring regulatory compliance and transparency.
+                Compliant with all regulatory requirements and built with security best practices to protect your data.
               </p>
             </div>
           </div>
@@ -197,7 +151,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold mb-2">500+</div>
+              <div className="text-4xl font-bold mb-2">100+</div>
               <div className="text-white/70">Applications Processed</div>
             </div>
             <div>
@@ -209,7 +163,7 @@ export default function LandingPage() {
               <div className="text-white/70">Platform Access</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">50+</div>
+              <div className="text-4xl font-bold mb-2">10+</div>
               <div className="text-white/70">Licensed Institutions</div>
             </div>
           </div>
@@ -223,11 +177,11 @@ export default function LandingPage() {
             Ready to Start Your Application?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join the growing number of financial institutions licensed through our streamlined portal.
+            Join the growing number of financial institutions licensed through our portal.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" asChild>
-              <Link href="/login">
+              <Link href="/signup">
                 Create Account
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -261,7 +215,7 @@ export default function LandingPage() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/login" className="hover:text-foreground">Sign In</Link></li>
                 <li><Link href="#features" className="hover:text-foreground">Features</Link></li>
-                <li><Link href="#process" className="hover:text-foreground">Process</Link></li>
+                <li><Link href="#process" className="hover:text-foreground">How it works</Link></li>
               </ul>
             </div>
             <div>
@@ -269,7 +223,7 @@ export default function LandingPage() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>KN 6 Ave, Kigali</li>
                 <li>info@bnr.rw</li>
-                <li>+250 788 000 000</li>
+                <li>+250 788 890 890</li>
               </ul>
             </div>
           </div>

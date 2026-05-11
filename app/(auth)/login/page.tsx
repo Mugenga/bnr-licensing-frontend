@@ -1,17 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, FileText, Loader2, ShieldCheck } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { toast } from 'sonner'
+import { PublicHeader } from '@/components/layout/public-header'
 import { authApi, getErrorMessage } from '@/lib/api'
 
 const loginSchema = z.object({
@@ -30,7 +31,6 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
@@ -41,7 +41,7 @@ export default function LoginPage() {
       const response = await authApi.login(data)
       localStorage.setItem('auth_token', response.token)
       localStorage.setItem('user', JSON.stringify(response.user))
-      toast.success('Welcome back!')
+      toast.success('Welcome back')
       router.push('/dashboard')
     } catch (error) {
       toast.error(getErrorMessage(error))
@@ -50,165 +50,126 @@ export default function LoginPage() {
     }
   }
 
-  const fillTestAccount = (email: string) => {
-    setValue('email', email)
-    setValue('password', 'Password123!')
-  }
-
   return (
-    <div className="min-h-screen bg-hero-bg flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-card border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-secondary">
-            <span className="text-sm font-bold text-secondary">BNR</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-heading uppercase tracking-wide">
-              National Bank of Rwanda
-            </span>
-            <span className="text-xs text-secondary">Banki Nkuru Y&apos;u Rwanda</span>
-          </div>
-        </div>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium text-heading hover:text-secondary">
-            Home
-          </Link>
-          <Link href="/" className="text-sm font-medium text-heading hover:text-secondary">
-            Job Openings
-          </Link>
-          <Link href="/" className="text-sm font-medium text-heading hover:text-secondary">
-            Process
-          </Link>
-          <Link href="/" className="text-sm font-medium text-heading hover:text-secondary">
-            Contact Us
-          </Link>
-        </nav>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" className="text-secondary font-medium">
-            Log In
-          </Button>
-          <Button className="bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-white">
-            Create Account
-          </Button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background">
+      <PublicHeader active="login" />
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
-          {/* Login Card */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center pb-2">
-              <CardTitle className="text-2xl font-semibold text-heading">
-                Welcome Back
-              </CardTitle>
-              <CardDescription>
-                Sign in to access your licensing portal
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    {...register('email')}
-                    className={errors.email ? 'border-destructive' : ''}
-                  />
-                  {errors.email && (
-                    <p className="text-xs text-destructive">{errors.email.message}</p>
-                  )}
+      <main className="relative overflow-hidden bg-gradient-to-br from-sidebar/5 via-background to-primary/5">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <section className="space-y-8">
+              <div className="space-y-5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-sidebar/20 bg-card/80 px-4 py-2 text-sm font-medium text-sidebar">
+                  <ShieldCheck className="h-4 w-4" />
+                  Secure regulator access
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter your password"
-                      {...register('password')}
-                      className={errors.password ? 'border-destructive pr-10' : 'pr-10'}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight text-balance">
+                  Continue managing licensing and compliance work.
+                </h1>
+                <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+                  Sign in to submit applications, review workflow activity, upload required documents, and track decisions from the Bank Licensing & Compliance Portal.
+                </p>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4 max-w-xl">
+                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                  <div className="h-11 w-11 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                    <FileText className="h-5 w-5 text-green-600" />
                   </div>
-                  {errors.password && (
-                    <p className="text-xs text-destructive">{errors.password.message}</p>
-                  )}
+                  <h2 className="font-semibold text-foreground">Application tracking</h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Follow each licensing request through every required stage.
+                  </p>
                 </div>
+                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                  <div className="h-11 w-11 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+                    <ShieldCheck className="h-5 w-5 text-amber-600" />
+                  </div>
+                  <h2 className="font-semibold text-foreground">Controlled access</h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Role permissions protect applicant, officer, and approver work.
+                  </p>
+                </div>
+              </div>
+            </section>
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing in...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+            <section className="w-full max-w-md lg:ml-auto">
+              <Card className="border-border shadow-2xl">
+                <CardHeader className="space-y-2">
+                  <CardTitle className="text-2xl font-semibold text-foreground">
+                    Sign in
+                  </CardTitle>
+                  <CardDescription>
+                    Use your portal account to access the dashboard.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        {...register('email')}
+                        className={errors.email ? 'border-destructive' : ''}
+                      />
+                      {errors.email && (
+                        <p className="text-xs text-destructive">{errors.email.message}</p>
+                      )}
+                    </div>
 
-          {/* Test Accounts Card */}
-          <Card className="border border-secondary/30 bg-accent">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-heading">
-                Test Accounts
-              </CardTitle>
-              <CardDescription className="text-xs">
-                Click to auto-fill credentials (Password: Password123!)
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs justify-start border-secondary/30 hover:bg-secondary/10"
-                onClick={() => fillTestAccount('superadmin@nrb.test')}
-              >
-                Superadmin
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs justify-start border-secondary/30 hover:bg-secondary/10"
-                onClick={() => fillTestAccount('applicant@nrb.test')}
-              >
-                Applicant
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs justify-start border-secondary/30 hover:bg-secondary/10"
-                onClick={() => fillTestAccount('officer@nrb.test')}
-              >
-                Officer
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs justify-start border-secondary/30 hover:bg-secondary/10"
-                onClick={() => fillTestAccount('approver@nrb.test')}
-              >
-                Approver
-              </Button>
-            </CardContent>
-          </Card>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Enter your password"
+                          autoComplete="current-password"
+                          {...register('password')}
+                          className={errors.password ? 'border-destructive pr-10' : 'pr-10'}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((value) => !value)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                      {errors.password && (
+                        <p className="text-xs text-destructive">{errors.password.message}</p>
+                      )}
+                    </div>
+
+                    <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Signing in...
+                        </>
+                      ) : (
+                        <>
+                          Sign In
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+
+                  <p className="mt-6 text-center text-sm text-muted-foreground">
+                    Do not have an account?{' '}
+                    <Link href="/signup" className="font-medium text-primary hover:underline">
+                      Create one
+                    </Link>
+                  </p>
+                </CardContent>
+              </Card>
+            </section>
+          </div>
         </div>
       </main>
     </div>
