@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -196,6 +196,7 @@ function withTotalPages<T>(response: BackendListResponse<T>): PaginatedResponse<
   }
 }
 
+// API Functions for authentication
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post("/auth/login", credentials)
@@ -221,6 +222,8 @@ export interface ApplicationsQueryParams {
   page?: number
   limit?: number
 }
+
+// API Functions for licensing applications
 
 export const applicationsApi = {
   list: async (params?: ApplicationsQueryParams): Promise<PaginatedResponse<Application>> => {
@@ -281,6 +284,7 @@ export const applicationsApi = {
   },
 }
 
+// API Functions for documents and file handling
 export const documentsApi = {
   download: async (documentId: string): Promise<Blob> => {
     const response = await api.get(`/documents/${documentId}/download`, { responseType: "blob" })
@@ -292,6 +296,8 @@ export interface UsersQueryParams {
   page?: number
   limit?: number
 }
+
+// API Functions for user and role management
 
 export const usersApi = {
   list: async (params?: UsersQueryParams): Promise<PaginatedResponse<User>> => {

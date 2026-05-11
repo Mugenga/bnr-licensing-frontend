@@ -16,6 +16,7 @@ import { PublicHeader } from '@/components/layout/public-header'
 import { PublicFooter } from '@/components/layout/public-footer'
 import { authApi, getErrorMessage } from '@/lib/api'
 
+// Validation values
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -26,7 +27,7 @@ type LoginForm = z.infer<typeof loginSchema>
 export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // sets loading state for form submission
 
   const {
     register,
@@ -36,12 +37,13 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   })
 
+  // Handle form submission
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
     try {
       const response = await authApi.login(data)
-      localStorage.setItem('auth_token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.user))
+      localStorage.setItem('auth_token', response.token) // Store token for future authenticated requests
+      localStorage.setItem('user', JSON.stringify(response.user)) // Cache user data for immediate access
       toast.success('Welcome back')
       router.push('/dashboard')
     } catch (error) {
@@ -62,9 +64,6 @@ export default function LoginPage() {
               <CardTitle className="text-2xl font-semibold text-foreground">
                 Sign in
               </CardTitle>
-              <CardDescription>
-                Use your portal account to access the dashboard.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -107,7 +106,7 @@ export default function LoginPage() {
                     <p className="text-xs text-destructive">{errors.password.message}</p>
                   )}
                 </div>
-
+                {/* Submission button with loading state */}
                 <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <>
