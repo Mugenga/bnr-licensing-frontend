@@ -5,6 +5,7 @@ export type {
   Document,
   LicenseType,
   Permission,
+  RequiredDocument,
   Role,
   User,
   UserRole,

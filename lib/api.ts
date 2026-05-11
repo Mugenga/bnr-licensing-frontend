@@ -159,10 +159,16 @@ export interface Document {
   uploadedBy: string
   originalName: string
   storedName: string
+  documentType?: string
   mimeType: string
   sizeBytes: number
   version: number
   createdAt: string
+}
+
+export interface RequiredDocument {
+  key: string
+  label: string
 }
 
 export interface AuditLog {
@@ -243,6 +249,12 @@ export const applicationsApi = {
     const response: AxiosResponse<ApiResponse<Application>> = await api.post("/applications", data)
     return response.data.data
   },
+  getRequiredDocuments: async (licenseType: string): Promise<RequiredDocument[]> => {
+    const response: AxiosResponse<ApiResponse<RequiredDocument[]>> = await api.get("/applications/required-documents", {
+      params: { licenseType },
+    })
+    return response.data.data
+  },
   submit: async (id: string): Promise<Application> => {
     const response: AxiosResponse<ApiResponse<Application>> = await api.patch(`/applications/${id}/submit`)
     return response.data.data
@@ -275,9 +287,14 @@ export const applicationsApi = {
     const response: AxiosResponse<ApiResponse<Document[]>> = await api.get(`/applications/${applicationId}/documents`)
     return response.data.data
   },
-  uploadDocuments: async (applicationId: string, files: File[]): Promise<Document[]> => {
+  uploadDocuments: async (applicationId: string, files: File[] | { file: File; documentType?: string }[]): Promise<Document[]> => {
     const formData = new FormData()
-    files.forEach((file) => formData.append("documents", file))
+    files.forEach((item) => {
+      const file = item instanceof File ? item : item.file
+      const documentType = item instanceof File ? undefined : item.documentType
+      formData.append("documents", file)
+      if (documentType) formData.append("documentTypes", documentType) // keep type aligned with file.
+    })
     const response: AxiosResponse<ApiResponse<Document[]>> = await api.post(`/applications/${applicationId}/documents`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     })

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -33,12 +34,22 @@ export default function NewApplicationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSavingDraft, setIsSavingDraft] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [requiredFiles, setRequiredFiles] = useState<Record<string, File | undefined>>({})
   const [formError, setFormError] = useState('')
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<ApplicationForm>({
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
     defaultValues: { licenseType: '' },
   })
+  const licenseType = watch('licenseType')
+
+  const requiredDocsQuery = useQuery({
+    queryKey: ['required-documents', licenseType],
+    queryFn: () => applicationsApi.getRequiredDocuments(licenseType),
+    enabled: !!licenseType,
+  })
+
+  const requiredDocuments = requiredDocsQuery.data || []
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -60,8 +71,33 @@ export default function NewApplicationPage() {
     setUploadedFiles((prev) => prev.filter((_, fileIndex) => fileIndex !== index))
   }
 
+  const setRequiredFile = (key: string, file?: File) => {
+    if (file && file.size > MAX_FILE_SIZE) {
+      setFormError(`${file.name} exceeds the 5MB limit`)
+      return
+    }
+    setRequiredFiles((prev) => ({ ...prev, [key]: file })) // set file by required doc.
+  }
+
+  const missingRequiredDocuments = () => {
+    return requiredDocuments.filter((document) => !requiredFiles[document.key])
+  }
+
   const createApplication = async (data: ApplicationForm, submit: boolean) => {
+    if (submit) {
+      const missing = missingRequiredDocuments()
+      if (missing.length) {
+        throw new Error(`Missing required documents: ${missing.map((document) => document.label).join(', ')}.`)
+      }
+    }
+
     const application = await applicationsApi.create(data)
+    const typedFiles = requiredDocuments
+      .map((document) => requiredFiles[document.key] ? { file: requiredFiles[document.key] as File, documentType: document.key } : null)
+      .filter(Boolean) as { file: File; documentType: string }[]
+    if (typedFiles.length > 0) {
+      await applicationsApi.uploadDocuments(application.id, typedFiles) // upload named required docs first.
+    }
     if (uploadedFiles.length > 0) {
       await applicationsApi.uploadDocuments(application.id, uploadedFiles) // attach files after draft exist.
     }
@@ -121,7 +157,10 @@ export default function NewApplicationPage() {
 
             <div className="space-y-2">
               <Label htmlFor="licenseType">License Type *</Label>
-              <Select onValueChange={(value) => setValue('licenseType', value, { shouldValidate: true })}>
+              <Select onValueChange={(value) => {
+                setValue('licenseType', value, { shouldValidate: true })
+                setRequiredFiles({}) // reset docs when license change.
+              }}>
                 <SelectTrigger className={errors.licenseType ? 'border-destructive' : ''}>
                   <SelectValue placeholder="Select license type" />
                 </SelectTrigger>
@@ -144,6 +183,27 @@ export default function NewApplicationPage() {
             <CardTitle>Supporting Documents</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {requiredDocuments.length > 0 && (
+              <div className="space-y-3">
+                <Label>Required Documents</Label>
+                {requiredDocuments.map((document) => (
+                  <div key={document.key} className="rounded-lg border border-border bg-background p-3">
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span className="text-sm font-medium">{document.label}</span>
+                      {requiredFiles[document.key] && (
+                        <span className="text-xs text-muted-foreground">{requiredFiles[document.key]?.name}</span>
+                      )}
+                    </div>
+                    <Input
+                      type="file"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                      onChange={(event) => setRequiredFile(document.key, event.target.files?.[0])}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
             <Label htmlFor="file-upload" className="block cursor-pointer">
               <div className="flex items-center gap-2 rounded-lg border border-dashed border-secondary px-4 py-6 transition-colors hover:bg-accent">
                 <Upload className="h-4 w-4 text-secondary" />
