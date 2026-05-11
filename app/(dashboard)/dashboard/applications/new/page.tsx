@@ -91,6 +91,7 @@ export default function NewApplicationPage() {
       }
     }
 
+    // backend needs an application row before files can attach.
     const application = await applicationsApi.create(data)
     const typedFiles = requiredDocuments
       .map((document) => requiredFiles[document.key] ? { file: requiredFiles[document.key] as File, documentType: document.key } : null)
@@ -159,7 +160,7 @@ export default function NewApplicationPage() {
               <Label htmlFor="licenseType">License Type *</Label>
               <Select onValueChange={(value) => {
                 setValue('licenseType', value, { shouldValidate: true })
-                setRequiredFiles({}) // reset docs when license change.
+                setRequiredFiles({}) // old required doc may not apply anymore.
               }}>
                 <SelectTrigger className={errors.licenseType ? 'border-destructive' : ''}>
                   <SelectValue placeholder="Select license type" />

@@ -101,7 +101,7 @@ export default function ApplicationDetailsPage() {
     mutationFn: ({ key, file }: { key: string; file: File }) => applicationsApi.uploadDocuments(id, [{ file, documentType: key }]),
     onSuccess: async (_, variables) => {
       toast.success('Required document uploaded')
-      setRequiredUploadFiles((prev) => ({ ...prev, [variables.key]: undefined })) // clear this row only.
+      setRequiredUploadFiles((prev) => ({ ...prev, [variables.key]: undefined })) // clear just this row.
       setWorkflowError('')
       await invalidate()
     },
@@ -119,7 +119,7 @@ export default function ApplicationDetailsPage() {
   const additionalInfoMessage = [...auditLogs]
     .reverse()
     .find((entry) => entry.action === 'additional_documents_requested')
-    ?.metadata?.message
+    ?.metadata?.message // latest officer message.
 
   if (applicationQuery.isLoading) return <LoadingState message="Loading application..." />
   if (applicationQuery.isError || !app) return <ErrorState title="Could not load application" message="Please check that the backend is running." onRetry={() => applicationQuery.refetch()} />
@@ -134,7 +134,7 @@ export default function ApplicationDetailsPage() {
   const uploadedTypes = new Set(documents.map((document) => document.documentType).filter(Boolean))
 
   const setRequiredUploadFile = (key: string, file?: File) => {
-    setRequiredUploadFiles((prev) => ({ ...prev, [key]: file })) // lets each required doc keep own file.
+    setRequiredUploadFiles((prev) => ({ ...prev, [key]: file })) // lets each doc keep own file.
   }
 
   const downloadDocument = async (documentId: string, fileName: string) => {
