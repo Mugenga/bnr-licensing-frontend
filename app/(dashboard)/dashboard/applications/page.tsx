@@ -59,13 +59,6 @@ export default function ApplicationsPage() {
     return 'All Applications'
   }
 
-  const getPageDescription = () => {
-    if (hasRole('applicant')) return 'View and manage your license applications'
-    if (hasRole('officer')) return 'Review submitted applications and request documents'
-    if (hasRole('approver')) return 'Make final decisions on reviewed applications'
-    return 'Manage all license applications in the system'
-  }
-
   if (isLoading) return <LoadingState message="Loading applications..." />
   if (isError) return <ErrorState title="Could not load applications" message="Please check that the backend is running." onRetry={() => refetch()} />
 
@@ -73,7 +66,6 @@ export default function ApplicationsPage() {
     <div className="space-y-6">
       <PageHeader
         title={getPageTitle()}
-        description={getPageDescription()}
         actions={
           hasRole('applicant') && (
             <Button asChild>
@@ -117,7 +109,6 @@ export default function ApplicationsPage() {
             <EmptyState
               icon={FileText}
               title="No applications found"
-              description={searchQuery || statusFilter !== 'all' ? 'Try adjusting your search or filters' : 'Start by creating a new application'}
               action={hasRole('applicant') && (
                 <Button asChild>
                   <Link href="/dashboard/applications/new">

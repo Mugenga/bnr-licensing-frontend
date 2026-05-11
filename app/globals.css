@@ -4,7 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* BNR Core Palette */
   --background: #F7F5F0;
   --foreground: #4A4A4A;
   --card: #FFFFFF;
@@ -12,32 +11,25 @@
   --popover: #FFFFFF;
   --popover-foreground: #4A4A4A;
   
-  /* Primary - Teal for action buttons */
   --primary: #0D9488;
   --primary-foreground: #FFFFFF;
   
-  /* Secondary - Brown/Gold for outline buttons */
   --secondary: #7D6B4A;
   --secondary-foreground: #FFFFFF;
   
-  /* Muted */
   --muted: #F3F4F6;
   --muted-foreground: #6B7280;
   
-  /* Accent - Cream */
   --accent: #FEF7E8;
   --accent-foreground: #5D4E37;
   
-  /* Destructive */
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
   
-  /* Borders and inputs */
   --border: #E5E7EB;
   --input: #E5E7EB;
   --ring: #7D6B4A;
   
-  /* Chart colors - Using BNR accent colors */
   --chart-1: #22C55E;
   --chart-2: #3B82F6;
   --chart-3: #EAB308;
@@ -46,7 +38,6 @@
   
   --radius: 0.5rem;
   
-  /* Sidebar - Dark olive/gold */
   --sidebar: #7D6B4A;
   --sidebar-foreground: #FFFFFF;
   --sidebar-primary: #FFFFFF;
@@ -56,7 +47,6 @@
   --sidebar-border: rgba(255, 255, 255, 0.2);
   --sidebar-ring: #FFFFFF;
   
-  /* BNR Custom Colors */
   --heading: #5D4E37;
   --icon-green: #22C55E;
   --icon-yellow: #EAB308;

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth-context'
 import { applicationsApi } from '@/lib/api'
-import { PageHeader } from '@/components/layout/page-header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { IconCircle } from '@/components/ui/icon-circle'
@@ -23,7 +22,7 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon: Icon, color }: StatCardProps) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardContent className="flex items-center gap-4 p-6">
         <IconCircle icon={Icon} color={color} size="lg" />
         <div>
@@ -57,19 +56,26 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`Hi ${user?.fullName || 'User'}, Welcome Back!`}
-        actions={
-          hasRole('applicant') && (
-            <Button asChild>
+      <section className="overflow-hidden rounded-lg bg-sidebar text-white shadow-sm">
+        <div className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8">
+          <div className="space-y-3">
+            <p className="text-sm font-medium uppercase tracking-wide text-white/70">
+              Bank Licensing & Compliance Portal
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
+              Hi {user?.fullName || 'User'}, welcome back.
+            </h1>
+          </div>
+          {hasRole('applicant') && (
+            <Button className="bg-white text-sidebar hover:bg-white/90" asChild>
               <Link href="/dashboard/applications/new">
                 <Plus className="mr-2 h-4 w-4" />
                 New Application
               </Link>
             </Button>
-          )
-        }
-      />
+          )}
+        </div>
+      </section>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Applications" value={stats.totalApplications} icon={FileText} color="blue" />
@@ -78,7 +84,7 @@ export default function DashboardPage() {
         <StatCard title="Rejected" value={stats.rejected} icon={XCircle} color="orange" />
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg font-semibold text-heading">Recent Applications</CardTitle>
           <Button variant="outline" size="sm" asChild>
@@ -121,7 +127,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">You have {stats.pendingReview} applications waiting for review.</p>
+            <p className="text-2xl font-semibold text-heading">{stats.pendingReview}</p>
           </CardContent>
         </Card>
       )}
@@ -135,7 +141,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">You have {stats.pendingApproval} applications pending final decision.</p>
+            <p className="text-2xl font-semibold text-heading">{stats.pendingApproval}</p>
           </CardContent>
         </Card>
       )}

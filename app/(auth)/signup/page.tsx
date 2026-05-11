@@ -9,14 +9,13 @@ import { z } from 'zod'
 import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicHeader } from '@/components/layout/public-header'
 import { PublicFooter } from '@/components/layout/public-footer'
 import { authApi, getErrorMessage } from '@/lib/api'
 
-// Validation values
 const signupSchema = z
   .object({
     fullName: z.string().min(2, 'Full name is required'),
@@ -45,14 +44,12 @@ export default function SignupPage() {
     resolver: zodResolver(signupSchema),
   })
 
-
-  // Handle form submission
   const onSubmit = async ({ confirmPassword, ...data }: SignupForm) => {
     setIsLoading(true)
     try {
       const response = await authApi.register(data)
-      localStorage.setItem('auth_token', response.token) // Store token for future authenticated requests
-      localStorage.setItem('user', JSON.stringify(response.user)) // Cache user data for immediate access
+      localStorage.setItem('auth_token', response.token)
+      localStorage.setItem('user', JSON.stringify(response.user))
       toast.success('Account created')
       router.push('/dashboard')
     } catch (error) {

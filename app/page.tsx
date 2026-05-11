@@ -8,10 +8,8 @@ import { PublicFooter } from '@/components/layout/public-footer'
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* 0. Header/Navigation Section */}
       <PublicHeader />
 
-      {/* 1. Main Header Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-sidebar/5 via-background to-primary/5">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
@@ -20,10 +18,6 @@ export default function LandingPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
                 Bank Licensing & Compliance Portal
               </h1>
-              <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                A digital platform for financial institutions to submit licensing applications, 
-                track progress, and maintain regulatory compliance with the National Bank of Rwanda.
-              </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="gap-2" asChild>
                   <Link href="/login">
@@ -76,16 +70,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 2. Features Section */}
       <section id="features" className="py-24 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Improved Licensing Process
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our platform simplifies the entire licensing workflow from application to approval
-            </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-shadow">
@@ -93,61 +83,46 @@ export default function LandingPage() {
                 <FileText className="h-7 w-7 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Digital Applications</h3>
-              <p className="text-muted-foreground">
-                Submit and manage all licensing applications online.
-              </p>
             </div>
             <div className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <Clock className="h-7 w-7 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Real-time Tracking</h3>
-              <p className="text-muted-foreground">
-                Monitor your application status at every stage with instant notifications and detailed timelines.
-              </p>
             </div>
             <div className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <Shield className="h-7 w-7 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Secure & Compliant</h3>
-              <p className="text-muted-foreground">
-                Compliant with all regulatory requirements and built with security best practices to protect your data.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Process Section */}
       <section id="process" className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               How It Works
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A transparent, step-by-step process for your licensing needs
-            </p>
           </div>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { step: '01', title: 'Create Application', desc: 'Submit your institution details and license type' },
-              { step: '02', title: 'Upload Documents', desc: 'Provide required supporting documentation' },
-              { step: '03', title: 'Review Process', desc: 'Our officers review your application thoroughly' },
-              { step: '04', title: 'Final Decision', desc: 'Receive approval or feedback from approvers' },
+              { step: '01', title: 'Create Application' },
+              { step: '02', title: 'Upload Documents' },
+              { step: '03', title: 'Review Process' },
+              { step: '04', title: 'Final Decision' },
             ].map((item) => (
               <div key={item.step} className="relative">
                 <div className="text-6xl font-bold text-muted/50 mb-4">{item.step}</div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-16 bg-sidebar text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 text-center">
@@ -171,15 +146,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
             Ready to Start Your Application?
           </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Join the growing number of financial institutions licensed through our portal.
-          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" asChild>
               <Link href="/signup">
@@ -194,7 +165,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <PublicFooter />
     </div>
   )

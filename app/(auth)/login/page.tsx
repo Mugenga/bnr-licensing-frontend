@@ -9,14 +9,13 @@ import { z } from 'zod'
 import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicHeader } from '@/components/layout/public-header'
 import { PublicFooter } from '@/components/layout/public-footer'
 import { authApi, getErrorMessage } from '@/lib/api'
 
-// Validation values
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -27,7 +26,7 @@ type LoginForm = z.infer<typeof loginSchema>
 export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false) // sets loading state for form submission
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -37,13 +36,12 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   })
 
-  // Handle form submission
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
     try {
       const response = await authApi.login(data)
-      localStorage.setItem('auth_token', response.token) // Store token for future authenticated requests
-      localStorage.setItem('user', JSON.stringify(response.user)) // Cache user data for immediate access
+      localStorage.setItem('auth_token', response.token)
+      localStorage.setItem('user', JSON.stringify(response.user))
       toast.success('Welcome back')
       router.push('/dashboard')
     } catch (error) {
@@ -106,7 +104,6 @@ export default function LoginPage() {
                     <p className="text-xs text-destructive">{errors.password.message}</p>
                   )}
                 </div>
-                {/* Submission button with loading state */}
                 <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <>

@@ -14,10 +14,6 @@ export function PublicFooter() {
               height={37}
               className="h-9 w-auto mb-4"
             />
-            <p className="text-sm text-muted-foreground max-w-md">
-              The Bank Licensing & Compliance Portal is an official platform of the National Bank of Rwanda
-              for managing financial institution licensing.
-            </p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>

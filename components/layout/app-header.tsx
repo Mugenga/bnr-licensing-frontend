@@ -1,6 +1,6 @@
 'use client'
 
-import { Bell, ChevronDown, LogOut, User } from 'lucide-react'
+import { ChevronDown, LogOut, Search, User } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -23,26 +23,18 @@ export function AppHeader() {
   const roleName = user?.role?.name || 'User'
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card px-4 md:px-6">
-      {/* Left side - can add breadcrumbs or back button here */}
-      <div className="flex items-center gap-4 md:ml-64">
-        {/* Placeholder for breadcrumbs or page title */}
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/85 md:px-8">
+      <div className="ml-12 flex items-center gap-3 md:ml-0">
+        <div className="hidden h-9 w-72 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground md:flex">
+          <Search className="h-4 w-4" />
+          <span>Search applications, users, roles</span>
+        </div>
       </div>
 
-      {/* Right side - notifications and user menu */}
-      <div className="flex items-center gap-4">
-        {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5 text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-            3
-          </span>
-        </Button>
-
-        {/* User Menu */}
+      <div className="flex items-center gap-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2 px-2">
+            <Button variant="ghost" className="flex h-11 items-center gap-2 rounded-lg px-2 hover:bg-accent">
               <Avatar className="h-8 w-8 bg-secondary">
                 <AvatarFallback className="bg-secondary text-secondary-foreground text-sm">
                   {initials}

@@ -6,13 +6,13 @@ import { MoreHorizontal, Plus, Search, Shield, Trash2 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { LoadingState } from '@/components/ui/loading-state'
 import { ErrorState } from '@/components/ui/error-state'
@@ -94,7 +94,7 @@ export default function RolesPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Roles & Permissions" description="Manage user roles and their associated permissions" actions={<Button onClick={() => setShowCreateDialog(true)}><Plus className="mr-2 h-4 w-4" />Add Role</Button>} />
+      <PageHeader title="Roles & Permissions" actions={<Button onClick={() => setShowCreateDialog(true)}><Plus className="mr-2 h-4 w-4" />Add Role</Button>} />
 
       <Card>
         <CardContent className="p-4">
@@ -137,7 +137,7 @@ export default function RolesPage() {
 
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader><DialogTitle>Create New Role</DialogTitle><DialogDescription>Define a role with backend permissions. The backend blocks unsafe review plus approval combinations.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Create New Role</DialogTitle></DialogHeader>
           <div className="space-y-6 py-4">
             <div className="space-y-2"><Label htmlFor="roleName">Role Name</Label><Input id="roleName" value={newRole.name} onChange={(e) => setNewRole({ ...newRole, name: e.target.value })} /></div>
             <div className="space-y-2"><Label htmlFor="roleDescription">Description</Label><Textarea id="roleDescription" value={newRole.description} onChange={(e) => setNewRole({ ...newRole, description: e.target.value })} rows={2} /></div>
@@ -164,7 +164,7 @@ export default function RolesPage() {
 
       <Dialog open={showPermissionsDialog} onOpenChange={setShowPermissionsDialog}>
         <DialogContent className="sm:max-w-lg">
-          <DialogHeader><DialogTitle>{selectedRole?.name} Permissions</DialogTitle><DialogDescription>{selectedRole?.description}</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{selectedRole?.name} Permissions</DialogTitle></DialogHeader>
           <div className="flex flex-wrap gap-2 py-4">
             {selectedRole?.permissions.length ? selectedRole.permissions.map((permission) => <Badge key={permission} variant="secondary">{permission}</Badge>) : <p className="text-sm text-muted-foreground">No permissions assigned.</p>}
           </div>

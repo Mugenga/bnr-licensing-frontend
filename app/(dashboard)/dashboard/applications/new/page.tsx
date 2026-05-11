@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { applicationsApi, getErrorMessage } from '@/lib/api'
 import { formatFileSize, licenseTypes } from '@/lib/status-utils'
@@ -97,13 +97,12 @@ export default function NewApplicationPage() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <PageHeader title="New License Application" description="Submit a new banking license application" backHref="/dashboard/applications" />
+      <PageHeader title="New License Application" backHref="/dashboard/applications" />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Institution Information</CardTitle>
-            <CardDescription>Basic information about the applicant institution</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -127,7 +126,7 @@ export default function NewApplicationPage() {
 
             <div className="space-y-2">
               <Label htmlFor="description">Additional Information</Label>
-              <Textarea id="description" placeholder="Provide any additional information about your application..." {...register('description')} rows={4} />
+              <Textarea id="description" {...register('description')} rows={4} />
             </div>
           </CardContent>
         </Card>
@@ -135,7 +134,6 @@ export default function NewApplicationPage() {
         <Card>
           <CardHeader>
             <CardTitle>Supporting Documents</CardTitle>
-            <CardDescription>Upload required documents (max 5MB per file)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Label htmlFor="file-upload" className="block cursor-pointer">

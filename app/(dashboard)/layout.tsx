@@ -32,9 +32,13 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="md:pl-64">
+      <div className="md:pl-72">
         <AppHeader />
-        <main className="p-4 md:p-6">{children}</main>
+        <main className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-background via-background to-accent/45 p-4 md:p-8">
+          <div className="mx-auto max-w-7xl">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   )

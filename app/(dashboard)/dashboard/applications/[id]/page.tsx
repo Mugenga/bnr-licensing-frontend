@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { IconCircle } from '@/components/ui/icon-circle'
@@ -112,7 +112,6 @@ export default function ApplicationDetailsPage() {
     <div className="space-y-6">
       <PageHeader
         title={app.institutionName}
-        description={`Application ${app.referenceNumber}`}
         backHref="/dashboard/applications"
         actions={
           <div className="flex items-center gap-2">
@@ -234,7 +233,7 @@ export default function ApplicationDetailsPage() {
 
       <Dialog open={showRequestDocsDialog} onOpenChange={setShowRequestDocsDialog}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Request Additional Documents</DialogTitle><DialogDescription>Specify which documents you need from the applicant.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Request Additional Documents</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="request-message">Documents Required</Label><Textarea id="request-message" value={requestMessage} onChange={(e) => setRequestMessage(e.target.value)} rows={4} /></div>
           <DialogFooter><Button variant="outline" onClick={() => setShowRequestDocsDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'requestDocuments', value: requestMessage })} disabled={!requestMessage.trim() || actionMutation.isPending}>Send Request</Button></DialogFooter>
         </DialogContent>
@@ -242,7 +241,7 @@ export default function ApplicationDetailsPage() {
 
       <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Approve Application</DialogTitle><DialogDescription>Provide a final decision note.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Approve Application</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="approve-note">Decision Note</Label><Textarea id="approve-note" value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} rows={4} /></div>
           <DialogFooter><Button variant="outline" onClick={() => setShowApproveDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'approve', value: decisionNote })} disabled={!decisionNote.trim() || actionMutation.isPending} className="bg-green-600 hover:bg-green-700">Approve</Button></DialogFooter>
         </DialogContent>
@@ -250,7 +249,7 @@ export default function ApplicationDetailsPage() {
 
       <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Reject Application</DialogTitle><DialogDescription>Provide a rejection reason.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Reject Application</DialogTitle></DialogHeader>
           <div className="space-y-2 py-4"><Label htmlFor="reject-note">Decision Note</Label><Textarea id="reject-note" value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} rows={4} /></div>
           <DialogFooter><Button variant="outline" onClick={() => setShowRejectDialog(false)}>Cancel</Button><Button onClick={() => actionMutation.mutate({ action: 'reject', value: decisionNote })} variant="destructive" disabled={!decisionNote.trim() || actionMutation.isPending}>Reject</Button></DialogFooter>
         </DialogContent>

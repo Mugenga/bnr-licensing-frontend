@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { QueryProvider } from '@/lib/query-provider'
 import { Toaster } from '@/components/ui/sonner'
-import './globals.css' // Import global styles
+import './globals.css'
 
-// Define metadata and viewport for the application
 export const metadata: Metadata = {
   title: {
     default: 'Bank Licensing Portal - National Bank of Rwanda',

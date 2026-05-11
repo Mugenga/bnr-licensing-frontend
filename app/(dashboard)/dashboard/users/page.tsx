@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { LoadingState } from '@/components/ui/loading-state'
@@ -69,7 +69,7 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Users Management" description="Manage system users and their roles" actions={<Button onClick={() => setShowCreateDialog(true)}><Plus className="mr-2 h-4 w-4" />Add User</Button>} />
+      <PageHeader title="Users Management" actions={<Button onClick={() => setShowCreateDialog(true)}><Plus className="mr-2 h-4 w-4" />Add User</Button>} />
 
       <Card>
         <CardContent className="p-4">
@@ -127,7 +127,7 @@ export default function UsersPage() {
 
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Add New User</DialogTitle><DialogDescription>Create a new user account and assign a role.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Add New User</DialogTitle></DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2"><Label htmlFor="fullName">Full Name</Label><Input id="fullName" value={newUser.fullName} onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })} /></div>
             <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} /></div>
