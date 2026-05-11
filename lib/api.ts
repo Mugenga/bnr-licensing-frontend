@@ -255,6 +255,14 @@ export const applicationsApi = {
     })
     return response.data.data
   },
+  getRequiredDocumentsConfig: async (): Promise<Record<string, RequiredDocument[]>> => {
+    const response: AxiosResponse<ApiResponse<Record<string, RequiredDocument[]>>> = await api.get("/applications/required-documents")
+    return response.data.data
+  },
+  setRequiredDocuments: async (licenseType: string, documents: RequiredDocument[]): Promise<RequiredDocument[]> => {
+    const response: AxiosResponse<ApiResponse<RequiredDocument[]>> = await api.put("/applications/required-documents", { licenseType, documents })
+    return response.data.data
+  },
   submit: async (id: string): Promise<Application> => {
     const response: AxiosResponse<ApiResponse<Application>> = await api.patch(`/applications/${id}/submit`)
     return response.data.data

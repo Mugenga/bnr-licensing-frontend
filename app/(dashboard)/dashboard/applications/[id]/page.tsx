@@ -33,11 +33,17 @@ export default function ApplicationDetailsPage() {
   const [requestMessage, setRequestMessage] = useState('')
   const [decisionNote, setDecisionNote] = useState('')
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [requiredUploadFiles, setRequiredUploadFiles] = useState<Record<string, File | undefined>>({})
   const [workflowError, setWorkflowError] = useState('')
 
   const applicationQuery = useQuery({ queryKey: ['application', id], queryFn: () => applicationsApi.get(id) })
   const documentsQuery = useQuery({ queryKey: ['application-documents', id], queryFn: () => applicationsApi.getDocuments(id), enabled: !!applicationQuery.data })
   const auditQuery = useQuery({ queryKey: ['application-audit', id], queryFn: () => applicationsApi.getAuditLogs(id), enabled: !!applicationQuery.data })
+  const requiredDocsQuery = useQuery({
+    queryKey: ['required-documents', applicationQuery.data?.licenseType],
+    queryFn: () => applicationsApi.getRequiredDocuments(applicationQuery.data?.licenseType || ''),
+    enabled: !!applicationQuery.data?.licenseType,
+  })
 
   const invalidate = async () => {
     await Promise.all([
@@ -91,9 +97,29 @@ export default function ApplicationDetailsPage() {
     },
   })
 
+  const requiredUploadMutation = useMutation({
+    mutationFn: ({ key, file }: { key: string; file: File }) => applicationsApi.uploadDocuments(id, [{ file, documentType: key }]),
+    onSuccess: async (_, variables) => {
+      toast.success('Required document uploaded')
+      setRequiredUploadFiles((prev) => ({ ...prev, [variables.key]: undefined })) // clear this row only.
+      setWorkflowError('')
+      await invalidate()
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error)
+      setWorkflowError(message)
+      toast.error(message)
+    },
+  })
+
   const app = applicationQuery.data
   const documents = documentsQuery.data || []
   const auditLogs = auditQuery.data || []
+  const requiredDocuments = requiredDocsQuery.data || []
+  const additionalInfoMessage = [...auditLogs]
+    .reverse()
+    .find((entry) => entry.action === 'additional_documents_requested')
+    ?.metadata?.message
 
   if (applicationQuery.isLoading) return <LoadingState message="Loading application..." />
   if (applicationQuery.isError || !app) return <ErrorState title="Could not load application" message="Please check that the backend is running." onRetry={() => applicationQuery.refetch()} />
@@ -105,6 +131,11 @@ export default function ApplicationDetailsPage() {
   const canApprove = hasRole('approver') && app.status === 'pending_approval'
   const canUploadDocs = hasRole('applicant') && ['draft', 'additional_documents_requested'].includes(app.status)
   const canResubmit = hasRole('applicant') && app.status === 'additional_documents_requested'
+  const uploadedTypes = new Set(documents.map((document) => document.documentType).filter(Boolean))
+
+  const setRequiredUploadFile = (key: string, file?: File) => {
+    setRequiredUploadFiles((prev) => ({ ...prev, [key]: file })) // lets each required doc keep own file.
+  }
 
   const downloadDocument = async (documentId: string, fileName: string) => {
     try {
@@ -161,11 +192,56 @@ export default function ApplicationDetailsPage() {
             </CardContent>
           </Card>
 
+          {app.status === 'additional_documents_requested' && typeof additionalInfoMessage === 'string' && additionalInfoMessage && (
+            <Card className="border-secondary/40 bg-secondary/5">
+              <CardHeader><CardTitle>Additional Information Request</CardTitle></CardHeader>
+              <CardContent>
+                <p className="text-sm">{additionalInfoMessage}</p>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <Tabs defaultValue="documents">
               <CardHeader className="pb-0"><TabsList><TabsTrigger value="documents">Documents</TabsTrigger><TabsTrigger value="timeline">Timeline</TabsTrigger></TabsList></CardHeader>
               <CardContent className="pt-6">
                 <TabsContent value="documents" className="m-0 space-y-4">
+                  {requiredDocuments.length > 0 && (
+                    <div className="space-y-3 rounded-lg border border-border bg-background p-4">
+                      <Label>Required Documents</Label>
+                      {requiredDocuments.map((document) => {
+                        const uploaded = uploadedTypes.has(document.key)
+                        const pickedFile = requiredUploadFiles[document.key]
+                        return (
+                          <div key={document.key} className="rounded-md border border-border px-3 py-3">
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-sm font-medium">{document.label}</span>
+                              <span className={uploaded ? 'text-sm text-green-700' : 'text-sm text-destructive'}>
+                                {uploaded ? 'Uploaded' : 'Missing'}
+                              </span>
+                            </div>
+                            {canUploadDocs && !uploaded && (
+                              <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto]">
+                                <input
+                                  type="file"
+                                  className="text-sm"
+                                  onChange={(event) => setRequiredUploadFile(document.key, event.target.files?.[0])}
+                                />
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  onClick={() => pickedFile && requiredUploadMutation.mutate({ key: document.key, file: pickedFile })}
+                                  disabled={!pickedFile || requiredUploadMutation.isPending}
+                                >
+                                  Upload
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                   {canUploadDocs && (
                     <div className="rounded-lg border border-dashed border-secondary p-4">
                       <Label htmlFor="document-upload" className="flex cursor-pointer items-center gap-2 text-secondary">
@@ -203,6 +279,9 @@ export default function ApplicationDetailsPage() {
                         </div>
                         <div className="flex-1 pb-4">
                           <p className="font-medium">{entry.action.replace(/_/g, ' ')}</p>
+                          {entry.action === 'additional_documents_requested' && typeof entry.metadata?.message === 'string' && (
+                            <p className="mt-1 text-sm">{entry.metadata.message}</p>
+                          )}
                           <p className="text-sm text-muted-foreground">{entry.fromStatus || '-'} → {entry.toStatus || '-'}</p>
                           <p className="mt-1 text-xs text-muted-foreground">{formatDateTime(entry.createdAt)}</p>
                         </div>

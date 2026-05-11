@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   FileText,
   FilePlus,
+  FileCheck,
   Users,
   Shield,
   ClipboardCheck,
@@ -65,6 +66,12 @@ const navItems: NavItem[] = [
     label: 'Users',
     href: '/dashboard/users',
     icon: Users,
+    roles: ['superadmin'],
+  },
+  {
+    label: 'Required Documents',
+    href: '/dashboard/required-documents',
+    icon: FileCheck,
     roles: ['superadmin'],
   },
   {
