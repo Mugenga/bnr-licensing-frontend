@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: 'Bank Licensing Portal - National Bank of Rwanda',
     template: '%s | BNR Licensing Portal'
   },
-  description: 'Bank Licensing & Compliance Portal for the National Bank of Rwanda. Submit, track, and manage banking license applications.',
+  description: 'National Bank of Rwanda licensing portal.',
   icons: {
     icon: [
       {
@@ -41,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-background">
-      <body className="font-sans antialiased">
+    <html lang="en" className="bg-background" suppressHydrationWarning>
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <QueryProvider>
           {children}
           <Toaster />

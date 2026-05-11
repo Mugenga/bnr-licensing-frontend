@@ -24,12 +24,12 @@ api.interceptors.response.use(
       const isAuthPage = window.location.pathname === "/login" || window.location.pathname === "/signup"
 
       if (isAuthRequest || isAuthPage) {
-        return Promise.reject(error)
+        return Promise.reject(error) // lets auth errors stay on form.
       }
 
       localStorage.removeItem("auth_token")
       localStorage.removeItem("user")
-      window.location.href = "/login"
+      window.location.href = "/login" // clear bad session here.
     }
     return Promise.reject(error)
   },
@@ -204,7 +204,6 @@ function withTotalPages<T>(response: BackendListResponse<T>): PaginatedResponse<
   }
 }
 
-// API Functions for authentication
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post("/auth/login", credentials)
@@ -230,8 +229,6 @@ export interface ApplicationsQueryParams {
   page?: number
   limit?: number
 }
-
-// API Functions for licensing applications
 
 export const applicationsApi = {
   list: async (params?: ApplicationsQueryParams): Promise<PaginatedResponse<Application>> => {
@@ -292,7 +289,6 @@ export const applicationsApi = {
   },
 }
 
-// API Functions for documents and file handling
 export const documentsApi = {
   download: async (documentId: string): Promise<Blob> => {
     const response = await api.get(`/documents/${documentId}/download`, { responseType: "blob" })
@@ -304,8 +300,6 @@ export interface UsersQueryParams {
   page?: number
   limit?: number
 }
-
-// API Functions for user and role management
 
 export const usersApi = {
   list: async (params?: UsersQueryParams): Promise<PaginatedResponse<User>> => {

@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userData = await authApi.me()
       setUser(userData)
-      localStorage.setItem('user', JSON.stringify(userData))
+      localStorage.setItem('user', JSON.stringify(userData)) // keep local user fresh.
     } catch {
       localStorage.removeItem('auth_token')
       localStorage.removeItem('user')
@@ -45,19 +45,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    // First try to get cached user for immediate render
     const storedUser = localStorage.getItem('user')
     const token = localStorage.getItem('auth_token')
     
     if (storedUser && token) {
       try {
-        setUser(JSON.parse(storedUser))
+        setUser(JSON.parse(storedUser)) // show cached user while token check.
       } catch {
-        // Invalid stored user
+        localStorage.removeItem('user')
       }
     }
 
-    // Then validate with server
     loadUser()
   }, [loadUser])
 
@@ -72,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('auth_token')
     localStorage.removeItem('user')
     setUser(null)
-    router.push('/login')
+    router.push('/login') // end local session.
   }, [router])
 
   const hasPermission = useCallback((permission: string): boolean => {
@@ -117,37 +115,25 @@ export function useAuth() {
   return context
 }
 
-// Custom hook for checking permissions
 export function usePermissions() {
   const { hasPermission, hasRole, user } = useAuth()
 
   return {
-    // Application permissions
     canCreateApplication: hasPermission('create_application'),
     canViewOwnApplications: hasPermission('view_own_applications'),
     canViewAllApplications: hasPermission('view_all_applications'),
     canReviewApplication: hasPermission('review_application'),
     canApproveApplication: hasPermission('approve_application'),
     canRejectApplication: hasPermission('reject_application'),
-    
-    // Document permissions
     canUploadDocuments: hasPermission('upload_documents'),
     canViewDocuments: hasPermission('view_documents'),
-    
-    // User permissions
     canManageUsers: hasPermission('manage_users'),
     canManageRoles: hasPermission('manage_roles'),
-    
-    // Audit permissions
     canViewAuditLogs: hasPermission('view_audit_logs'),
-    
-    // Role checks
     isApplicant: hasRole('applicant'),
     isOfficer: hasRole('officer'),
     isApprover: hasRole('approver'),
     isSuperadmin: hasRole('superadmin'),
-    
-    // Current user
     userId: user?.id,
   }
 }

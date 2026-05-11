@@ -13,7 +13,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/login')
+      router.push('/login') // send signed-out users back.
     }
   }, [isLoading, isAuthenticated, router])
 

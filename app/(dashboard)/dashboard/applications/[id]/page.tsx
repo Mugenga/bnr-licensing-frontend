@@ -42,7 +42,7 @@ export default function ApplicationDetailsPage() {
       queryClient.invalidateQueries({ queryKey: ['application', id] }),
       queryClient.invalidateQueries({ queryKey: ['application-documents', id] }),
       queryClient.invalidateQueries({ queryKey: ['application-audit', id] }),
-      queryClient.invalidateQueries({ queryKey: ['applications'] }),
+      queryClient.invalidateQueries({ queryKey: ['applications'] }), // keep list counts current.
     ])
   }
 
@@ -50,11 +50,11 @@ export default function ApplicationDetailsPage() {
     mutationFn: async ({ action, value }: { action: string; value?: string }) => {
       if (action === 'submit') return applicationsApi.submit(id)
       if (action === 'review') return applicationsApi.startReview(id)
-      if (action === 'requestDocuments') return applicationsApi.requestDocuments(id, value || '')
+      if (action === 'requestDocuments') return applicationsApi.requestDocuments(id, value || '') // send officer message.
       if (action === 'resubmit') return applicationsApi.resubmit(id)
       if (action === 'pendingApproval') return applicationsApi.markPendingApproval(id)
-      if (action === 'approve') return applicationsApi.approve(id, value || '')
-      if (action === 'reject') return applicationsApi.reject(id, value || '')
+      if (action === 'approve') return applicationsApi.approve(id, value || '') // send decision note.
+      if (action === 'reject') return applicationsApi.reject(id, value || '') // send decision note.
       throw new Error('Unknown action')
     },
     onSuccess: async () => {
@@ -64,7 +64,7 @@ export default function ApplicationDetailsPage() {
       setShowRejectDialog(false)
       setRequestMessage('')
       setDecisionNote('')
-      await invalidate()
+      await invalidate() // refresh docs, audit trail, and status.
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   })
@@ -102,7 +102,7 @@ export default function ApplicationDetailsPage() {
       link.href = url
       link.download = fileName
       link.click()
-      URL.revokeObjectURL(url)
+      URL.revokeObjectURL(url) // release browser URL.
     } catch (error) {
       toast.error(getErrorMessage(error))
     }

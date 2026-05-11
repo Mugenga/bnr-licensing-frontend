@@ -2,115 +2,69 @@
 
 ## 1. Project Overview
 
-This project is the frontend interface for the Bank Licensing and Compliance Portal, a web-based system designed to support the licensing workflow of commercial banks and other regulated financial institutions. The portal is intended to replace a manual process that would normally depend on emails, spreadsheets, and scattered document handling.
+This is the frontend for the Bank Licensing and Compliance Portal. It gives applicants, officers, approvers, and system administrators an interface for working through the licensing process.
 
-The frontend provides a role-based working environment for applicants, licensing officers, approvers, and system administrators. It connects directly to the backend API and presents the application workflow in a clear and usable way, from application creation up to review, document requests, final approval, or rejection.
+Applicants can create applications, upload documents, submit applications, respond when more information is requested, and follow their own applications. 
 
+Officers can review applications, request missing documents, and send applications forward for approval. Approvers can make the final decision. Superadmins can manage users, roles, and permissions.
 
-### Technology Stack
+---
 
-The frontend was built using:
+## 2. Technology Stack
+
+The frontend was built with:
 
 - Next.js 16
 - React 19
 - TypeScript
 - Tailwind CSS
-- shadcn/ui components (For UI components used throughout the project)
-- React Query for server state management
-- Axios for backend API
-- React Hook Form and Zod for form validation
-- Lucide React for icons
+- shadcn/ui
 
-## System Integration
+I used shadcn/ui for reusable interface components.
 
-## User Roles Supported
+---
 
-The interface supports the four default roles from the backend:
+## 3. How to Run the Frontend
 
-- Applicant
-- Officer
-- Approver
-- Superadmin
+Before starting the frontend, make sure the backend is already running.
 
-## Default Test Accounts
-
-After running the backend seed command, the following accounts can be used:
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Superadmin | `superadmin@nrb.test` | `Password123!` |
-| Applicant | `applicant@nrb.test` | `Password123!` |
-| Officer | `officer@nrb.test` | `Password123!` |
-| Approver | `approver@nrb.test` | `Password123!` |
-
-## Environment Configuration
-
-Create a `.env.local` file in the frontend root
+Create a `.env.local` file in the frontend root:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
+````
+
+If this variable is not added, the frontend will use:
+
+```txt
+http://localhost:5000/api
 ```
 
-If this variable is not provided, the frontend assumes that the backend API is available at `http://localhost:5000/api`.
-
-## How to Run the Full Application
-
-1. First start the backend (More detailes in the backend ReadME.md file):
+Install dependencies:
 
 ```bash
-cd bnr-licensing-backend
 npm install
-npm run db:migrate
-npm run db:seed
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-2. Then start the frontend:
-
-```bash
-cd bnr-licensing-frontend
-npm install
-npm run dev
-```
-
-3. The frontend will be available at the URL defined in Next.js:
+Open the frontend in your browser:
 
 ```txt
 http://localhost:3000
 ```
 
-## Available Scripts
+To test the application, log in with one of the seeded users from the backend:
 
-```bash
-npm run dev
-```
+| Role       | Email                 | Password       |
+| ---------- | --------------------- | -------------- |
+| Superadmin | `superadmin@bnr.rw` | `Password123!` |
+| Applicant  | `applicant@bnr.rw`  | `Password123!` |
+| Officer    | `officer@bnr.rw`    | `Password123!` |
+| Approver   | `approver@bnr.rw`   | `Password123!` |
 
-Runs the frontend in development mode.
-
-```bash
-npm run build
-```
-
-This creates a production build.
-
-```bash
-npm run start
-```
-
-Runs the production build after `npm run build`.
-
-
-## Main Pages
-
-The frontend includes the following major pages:
-
-- Landing page
-- Login page
-- Dashboard
-- Applications list
-- New application form
-- Application details page
-- Users management page
-- Roles and permissions page
-
-The dashboard and navigation change depending on the logged-in user's role.
+````

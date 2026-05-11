@@ -44,14 +44,14 @@ export default function NewApplicationPage() {
 
     const validFiles = Array.from(files).filter((file) => {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error(`${file.name} exceeds the 5MB limit`)
+        toast.error(`${file.name} exceeds the 5MB limit`) // keep files under backend limit.
         return false
       }
       return true
     })
 
     setUploadedFiles((prev) => [...prev, ...validFiles])
-    e.target.value = ''
+    e.target.value = '' // lets same file be picked again.
   }
 
   const removeFile = (index: number) => {
@@ -61,10 +61,10 @@ export default function NewApplicationPage() {
   const createApplication = async (data: ApplicationForm, submit: boolean) => {
     const application = await applicationsApi.create(data)
     if (uploadedFiles.length > 0) {
-      await applicationsApi.uploadDocuments(application.id, uploadedFiles)
+      await applicationsApi.uploadDocuments(application.id, uploadedFiles) // attach files after draft exist.
     }
     if (submit) {
-      await applicationsApi.submit(application.id)
+      await applicationsApi.submit(application.id) // submit after uploads finish.
     }
     return application
   }
